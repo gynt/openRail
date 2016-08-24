@@ -18,9 +18,11 @@ class Track(serialization.Serializable):
         self.type="t"
         self.rotation=rotation
         self.location=location
+        self._exits=0
+        self._exitlocs=()
         self.set_location(location)
         self.set_rotation(rotation)
-        self._exits=0
+
 
     def set_rotation(self, rotation):
         self.rotation=rotation
@@ -38,6 +40,7 @@ class StraightTrack(Track):
     def __init__(self, rotation=0, location=Point(0,0,0), length=0):
         Track.__init__(self, rotation)
         self.length=length
+        self._r=90 #HMmmm
         self.update()
         self._exits=2
         
@@ -54,6 +57,7 @@ class StraightTrack(Track):
         z=T.sin(T.radians(self.rotation))*halfway
         self._l0=self.location.apply(x, 0, z, func=operator.sub)
         self._l1=self.location.apply(x, 0, z, func=operator.add)
+        self._exitlocs=(self._l0, self._l1)
 
     def compute_move(self, offset, distance, D=True):
         reach=distance+offset
@@ -103,6 +107,7 @@ class CurveTrack(Track):
     def _compute_locs(self):
         self._l0=self.center_point.apply(T.cos(T.radians(self.rotation))*self.radius, 0, T.sin(T.radians(self.rotation))*self.radius, func=operator.add)
         self._l1=self.center_point.apply(T.cos(T.radians(self.rotation+self.angle))*self.radius, 0, T.sin(T.radians(self.rotation+self.angle))*self.radius, func=operator.add)
+        self._exitlocs=(self._l0, self._l1)
 
     def _get_center_point(self):
         x=T.cos(T.radians(self.rotation+180+self.angle/2.0))*self.radius
