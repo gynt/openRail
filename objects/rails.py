@@ -18,13 +18,14 @@ class Track(serialization.Serializable):
         self.type="t"
         self.rotation=rotation
         self.location=location
-        self._exits=0
-        self._exitlocs=()
+        self._exits=[]
         self.set_location(location)
         self.set_rotation(rotation)
 
+    def get_rotation(self, exit):
+        raise NotImplementedError("Not implemented.")
 
-    def set_rotation(self, rotation):
+    def set_rotation(self, rotation, exit=None):
         self.rotation=rotation
         self.update()
 
@@ -41,11 +42,16 @@ class StraightTrack(Track):
         Track.__init__(self, rotation)
         self.length=length
         self._r=90 #HMmmm
+        self._exits=[None]*2
         self.update()
-        self._exits=2
+        
         
     def get_location(self):
         return self.location
+
+    def get_rotation(self, exit):
+        return self.rotation
+        #return self.rotation if exit==0 else (self.rotation+180)%360
 
     def update(self):
         if hasattr(self, "length"):
@@ -55,13 +61,12 @@ class StraightTrack(Track):
         halfway=self.length/2
         x=T.cos(T.radians(self.rotation))*halfway
         z=T.sin(T.radians(self.rotation))*halfway
-        self._l0=self.location.apply(x, 0, z, func=operator.sub)
-        self._l1=self.location.apply(x, 0, z, func=operator.add)
-        self._exitlocs=(self._l0, self._l1)
+        self._exits[0]=self.location.apply(x, 0, z, func=operator.sub)
+        self._exits[1]=self.location.apply(x, 0, z, func=operator.add)
 
     def compute_move(self, offset, distance, D=True):
         reach=distance+offset
-        a=self._l1 if D else self._l0
+        a=self._exits[1] if D else self._exits[0]
         df=self.length-reach
         if df > 0:
             off=0 if D else 180
@@ -72,7 +77,7 @@ class StraightTrack(Track):
             return a, self.length, df*-1
 
     def point_to_offset(self, point, D=True):
-        a=self._l0 if D else self._l1
+        a=self._exits[0] if D else self._exits[1]
         dv=point.apply(point=a,func=operator.sub)
         return abs(dv.x/T.cos(T.radians(self.rotation)))
             
@@ -85,19 +90,24 @@ class CurveTrack(Track):
         self.radius=radius
         self.angle=angle
         self.length=self._get_length()
+        self._exits=[None]*2
         self.update()
-        self._exits=2
+        
 
     def _get_length(self):
         return self._calc_distance_on_curve(self.angle)
 
-    def set_location(self,point):
-        self.location=point
-        self.update()
+    def get_rotation(self, exit):
+        return self.rotation-(.5*self.angle) if exit==0 else self.rotation+(.5*self.angle)
 
-    def set_rotation(self, rotation):
+    def set_rotation(self, rotation, exit=None):
         self.rotation=rotation
+        if exit==None:
+            self.update()
+            return
+        self.rotation=rotation+(self.angle/2) if exit==0 else rotation-(self.angle/2)
         self.update()
+            
 
     def update(self):
         if hasattr(self, "length") and hasattr(self, "angle"):
@@ -105,9 +115,8 @@ class CurveTrack(Track):
             self._compute_locs()
 
     def _compute_locs(self):
-        self._l0=self.center_point.apply(T.cos(T.radians(self.rotation))*self.radius, 0, T.sin(T.radians(self.rotation))*self.radius, func=operator.add)
-        self._l1=self.center_point.apply(T.cos(T.radians(self.rotation+self.angle))*self.radius, 0, T.sin(T.radians(self.rotation+self.angle))*self.radius, func=operator.add)
-        self._exitlocs=(self._l0, self._l1)
+        self._exits[0]=self.center_point.apply(T.cos(T.radians(self.rotation))*self.radius, 0, T.sin(T.radians(self.rotation))*self.radius, func=operator.add)
+        self._exits[1]=self.center_point.apply(T.cos(T.radians(self.rotation+self.angle))*self.radius, 0, T.sin(T.radians(self.rotation+self.angle))*self.radius, func=operator.add)
 
     def _get_center_point(self):
         x=T.cos(T.radians(self.rotation+180+self.angle/2.0))*self.radius
@@ -122,7 +131,7 @@ class CurveTrack(Track):
 
     def compute_move(self, offset, distance, D=True):
         reach=offset+distance
-        a=self._l1 if D else self._l0
+        a=self._exits[1] if D else self._exits[0]
         df=self.length-reach
         if df > 0:
             dc=self._calc_degrees_change(reach)
@@ -132,7 +141,7 @@ class CurveTrack(Track):
             return a, self.length, df*-1
 
     def point_to_offset(self, point, D=True):
-        a=self._l0 if D else self._l1
+        a=self._exits[0] if D else self._exits[1]
         dv=point.apply(point=self.center_point,func=operator.sub)
         an=T.degrees(T.acos(dv.x/self.radius))-self.rotation if D else (self.rotation+self.angle)-T.degrees(T.acos(dv.x/self.radius))
         return self._calc_distance_on_curve(an)
