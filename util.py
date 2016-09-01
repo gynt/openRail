@@ -2,11 +2,11 @@ from __future__ import division
 
 from collections import namedtuple
 
-import operator
+import operator, serialization
 
 #Point=namedtuple('Point','x y z')
 
-class Point(object):
+class Point(serialization.Serializable):
 
     def __init__(self, x=0, y=0, z=0):
         self.x=x
