@@ -6,6 +6,7 @@ if __name__=="__main__":
 
 from util import Point
 import serialization
+import math as T
 
 class Train(serialization.Serializable):
 
@@ -14,10 +15,46 @@ class Train(serialization.Serializable):
         self.wheel2=wheel2
         self.speed=0
         self.offset=0
+        self.offset2=0
+        self.track1=None
+        self.track2=None
         self.D=True
+        self.D2=True
+        self.rotation=0
+
+    def do_move(self):
+        tw1, to, r= self.track1.compute_move(self.offset, self.speed, self.D)
+        tw2, to2, r2= self.track2.compute_move(self.offset2, self.speed, self.D2)
 
 
 
+        while r > 0:
+            print(r)
+            i=self.track1.get_exit_index(tw1)
+            z=self.track1.get_exit(i)
+            if z:                
+                track_new, D = z[0], z[1]
+                self.D=not D > 0
+                to=0
+                self.track1=track_new
+
+                tw1, to, r = self.track1.compute_move(to, r, self.D)
+                
+
+            i=self.track2.get_exit_index(tw2)
+            z=self.track2.get_exit(i)
+            if z:                
+                track_new, D = z[0], z[1]
+                self.D2=not D > 0
+                to2=0
+                self.track2=track_new
+
+                tw2, to2, r2 = self.track2.compute_move(to2, r2, self.D2)
+
+        self.wheel1=tw1
+        self.offset=to
+        self.wheel2=tw2
+        self.offset2=to2
 
 def test_loop(train, track):
     import time
