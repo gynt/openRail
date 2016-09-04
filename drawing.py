@@ -8,7 +8,7 @@
 ##
 ##
 ##root.mainloop()
-
+from __future__ import division
 
 import turtle
 screen=turtle.Screen()

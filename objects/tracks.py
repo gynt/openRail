@@ -57,7 +57,7 @@ class Track(serialization.Serializable):
 class StraightTrack(Track):
 
     def __init__(self, rotation=0, location=Point(0,0,0), length=0):
-        Track.__init__(self, rotation)
+        Track.__init__(self, rotation, location)
         self.length=length
         self._r=90 #HMmmm
         self._init_exits(2)
@@ -103,7 +103,7 @@ class StraightTrack(Track):
 class CurveTrack(Track):
 
     def __init__(self, rotation=0, location=Point(0,0,0), radius=0, angle=360/16, length=None):
-        Track.__init__(self, rotation)
+        Track.__init__(self, rotation, location)
         self.radius=radius
         
         if angle and not length:
@@ -144,8 +144,8 @@ class CurveTrack(Track):
         self._exits[1]=self.center_point.apply(T.cos(T.radians(self.rotation+self.angle))*self.radius, 0, T.sin(T.radians(self.rotation+self.angle))*self.radius, func=operator.add)
 
     def _get_center_point(self):
-        x=T.cos(T.radians(self.rotation+180+self.angle/2.0))*self.radius
-        z=T.sin(T.radians(self.rotation+180+self.angle/2.0))*self.radius
+        x=T.cos(T.radians(self.rotation+180-(self.angle/2.0)))*self.radius
+        z=T.sin(T.radians(self.rotation+180-(self.angle/2.0)))*self.radius
         return self.location.apply(func=operator.add, x=x, y=0, z=z)
 
     def _calc_distance_on_curve(self, degrees):

@@ -1,3 +1,5 @@
+from __future__ import division
+
 import turtle
 screen=turtle.Screen()
 
@@ -15,9 +17,9 @@ def test_loop(train, track):
     c2="red"
     tt.color(c2,c2)
     while True:
-        print(tt.pos())
-        print(train.wheel1)
-        print(track._exits)
+        #print(tt.pos())
+        #print(train.wheel1)
+        #print(track._exits)
         #time.sleep(.1)
         train.wheel1, train.offset, remaining=track.compute_move(train.offset, train.speed, train.D)
         tt.setpos(train.wheel1.x, train.wheel1.z)
