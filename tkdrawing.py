@@ -49,7 +49,7 @@ def redraw_train(train):
     
     
     canvas.delete("train")
-    canvas.create_line(train.wheel1.x, train.wheel1.z, train.wheel2.x, train.wheel2.z, fill="red")
+    canvas.create_line(train.wheel1.x, train.wheel1.z, train.wheel2.x, train.wheel2.z, fill="red", tag="train")
 
 
 
@@ -63,7 +63,7 @@ def run():
     while True:
         train.do_move()
         redraw_train(train)
-        time.sleep(1)
+        #time.sleep(1)
         
 
 
