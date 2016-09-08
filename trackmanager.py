@@ -25,7 +25,7 @@ def force_assemble(track_wrapper1, exit1, track_wrapper2, exit2):
     if track_wrapper1.track.__class__.__name__=="StraightTrack" and track_wrapper2.track.__class__.__name__=="StraightTrack":
         if exit1==exit2:
             offset=180
-        track_wrapper2.track.set_rotation(track_wrapper1.track.get_rotation(exit1)+offset, exit2)
+        track_wrapper2.track.set_yaw(track_wrapper1.track.get_yaw(exit1)+offset, exit2)
         d=track_wrapper1.track._exits[exit1].apply(func=operator.sub, point=track_wrapper2.track._exits[exit2])
         track_wrapper2.track.set_location(d.apply(func=operator.add, point=track_wrapper2.track.location))
         track_wrapper1.set_exit_point(exit1, track_wrapper2, exit2)
@@ -33,7 +33,7 @@ def force_assemble(track_wrapper1, exit1, track_wrapper2, exit2):
     elif track_wrapper1.track.__class__.__name__=="CurveTrack" and track_wrapper2.track.__class__.__name__=="StraightTrack":
         if exit1 > 0:
             offset=90
-        track_wrapper2.track.set_rotation(track_wrapper1.track.get_rotation(exit1)+offset, exit2)
+        track_wrapper2.track.set_yaw(track_wrapper1.track.get_yaw(exit1)+offset, exit2)
         d=track_wrapper1.track._exits[exit1].apply(func=operator.sub, point=track_wrapper2.track._exits[exit2])
         track_wrapper2.track.set_location(d.apply(func=operator.add, point=track_wrapper2.track.location))
         track_wrapper1.set_exit_point(exit1, track_wrapper2, exit2)
@@ -43,7 +43,7 @@ def force_assemble(track_wrapper1, exit1, track_wrapper2, exit2):
             offset=180-track_wrapper2.track.angle-90
         else:
             offset=-90
-        track_wrapper2.track.set_rotation(track_wrapper1.track.get_rotation(exit1)+offset, exit2)
+        track_wrapper2.track.set_yaw(track_wrapper1.track.get_yaw(exit1)+offset, exit2)
         d=track_wrapper1.track._exits[exit1].apply(func=operator.sub, point=track_wrapper2.track._exits[exit2])
         track_wrapper2.track.set_location(d.apply(func=operator.add, point=track_wrapper2.track.location))
         track_wrapper1.set_exit_point(exit1, track_wrapper2, exit2)
@@ -51,7 +51,7 @@ def force_assemble(track_wrapper1, exit1, track_wrapper2, exit2):
     elif track_wrapper1.track.__class__.__name__=="CurveTrack" and track_wrapper2.track.__class__.__name__=="CurveTrack":
         if exit1==exit2:
             offset=180
-        track_wrapper2.track.set_rotation(track_wrapper1.track.get_rotation(exit1)+offset, exit2)
+        track_wrapper2.track.set_yaw(track_wrapper1.track.get_yaw(exit1)+offset, exit2)
         d=track_wrapper1.track._exits[exit1].apply(func=operator.sub, point=track_wrapper2.track._exits[exit2])
         track_wrapper2.track.set_location(d.apply(func=operator.add, point=track_wrapper2.track.location))
         track_wrapper1.set_exit_point(exit1, track_wrapper2, exit2)
@@ -68,9 +68,9 @@ def assembly_allowed_pos(track_wrapper1, exit1, track_wrapper2, exit2):
 
 def assembly_allowed_rot(track_wrapper1, exit1, track_wrapper2, exit2):
     if track_wrapper2.track.type=="StraightTrack":
-        return track_wrapper1.track.rotation-track_wrapper2.track.rotation%180==0
+        return track_wrapper1.track.yaw-track_wrapper2.track.yaw%180==0
     if track_wrapper2.track.type=="CurveTrack":
-         return track_wrapper1.track.rotation-track_wrapper2.track.rotation%180==0 or track_wrapper1.track.rotation==track_wrapper2.track.rotation+track_wrapper2.track.angle
+         return track_wrapper1.track.yaw-track_wrapper2.track.yaw%180==0 or track_wrapper1.track.yaw==track_wrapper2.track.yaw+track_wrapper2.track.angle
                 
 def assemble(track_wrapper1, exit1, track_wrapper2, exit2):
     if assembly_allowed(track_wrapper1, exit1, track_wrapper2, exit2):

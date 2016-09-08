@@ -30,40 +30,40 @@ def draw_track(track):
 from util import Point
 
 tracks=[]
-s=O.CurveTrack(location=Point(x=400, y=0, z=300), rotation=180, radius=200, angle=360/16)
+s=O.CurveTrack(location=Point(x=400, y=0, z=300), yaw=180, radius=200, angle=360/16)
 tracks.append(s)
 prev=s
 for i in range(15):
-    sss=O.CurveTrack(rotation=180, radius=200, angle=360/16)
+    sss=O.CurveTrack(yaw=180, radius=200, angle=360/16)
     trackmanager.force_assemble(prev, 1, sss, 0)
     prev=sss
     tracks.append(sss)
     
-train=T.Train(wheel1=s.location)
-train.speed=1
+train=T.Train(track1=s, track2=s, track1offset=s.length*0.5, track2offset=0)
+train.speed=10
 
 
-
+global line
+line=None
 def redraw_train(train):
+    global line
 
-    
+    canvas.create_line(train.location.x, train.location.z, train.location.x, train.location.z, fill="blue")
     
     canvas.delete("train")
-    canvas.create_line(train.wheel1.x, train.wheel1.z, train.wheel2.x, train.wheel2.z, fill="red", tag="train")
+    line=canvas.create_line(train.wheel1.x, train.wheel1.z, train.wheel2.x, train.wheel2.z, fill="red", tag="train")
 
 
 
 def run():
     import time
-    train.track1=tracks[1]
-    train.track2=tracks[0]
-    train.offset=3
-    train.offset2=0
     redraw_train(train)
-    while True:
+
+    def loop():
         train.do_move()
         redraw_train(train)
-        #time.sleep(1)
+        root.after(1000, loop)      
+    loop()
         
 
 
