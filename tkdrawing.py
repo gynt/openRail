@@ -19,7 +19,6 @@ def draw_tracks(tracks):
         draw_track(t)
 
 def draw_track(track):
-    print(track._exits)
     if track.__class__==O.CurveTrack:
         arc=canvas.create_line(track._exits[0].x,track._exits[0].z,track._exits[1].x,track._exits[1].z, tag="track")
     elif track.__clas__==O.StraightTrack:
@@ -30,7 +29,8 @@ def draw_track(track):
 from util import Point
 
 tracks=[]
-s=O.CurveTrack(location=Point(x=400, y=0, z=300), yaw=180, radius=200, angle=360/16)
+s=O.CurveTrack(location=Point(x=600, y=0, z=300), yaw=0, radius=200, angle=360/16)
+canvas.create_oval(s._exits[0].x-400, s._exits[0].z-200, s._exits[0].x, s._exits[0].z+200)
 tracks.append(s)
 prev=s
 for i in range(15):
@@ -38,9 +38,13 @@ for i in range(15):
     trackmanager.force_assemble(prev, 1, sss, 0)
     prev=sss
     tracks.append(sss)
+
+trackmanager.force_assemble(prev, 1, s, 0)
     
-train=T.Train(track1=s, track2=s, track1offset=s.length*0.5, track2offset=0)
-train.speed=10
+train=T.Train(track1=s, track2=s, track1offset=s.length, track2offset=0)
+train.speed=1
+train.D=False
+train.D2=False
 
 
 global line
@@ -62,7 +66,7 @@ def run():
     def loop():
         train.do_move()
         redraw_train(train)
-        root.after(1000, loop)      
+        root.after(10, loop)      
     loop()
         
 
@@ -70,7 +74,7 @@ def run():
 def draw():
     draw_tracks(tracks)
 
-draw()
+#draw()
 
 root.after(1000, run)
 

@@ -161,7 +161,7 @@ class CurveTrack(Track):
     def _calc_degrees_change(self, distance):
         return distance*360/(2*self.radius*T.pi)
 
-    def compute_move(self, offset, distance, D=True):
+    def compute_move(self, offset, distance, D):
         reach=offset+distance
         a=self._exits[1] if D else self._exits[0]
         df=self.length-reach

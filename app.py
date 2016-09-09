@@ -1,4 +1,7 @@
-import setup_env
+
+import sys
+if 'win' in sys.platform:
+    import setup_env
 import pyglet
 from pyglet.gl import *
 
@@ -34,14 +37,26 @@ class GameWindow(pyglet.window.Window):
         glClear(GL_COLOR_BUFFER_BIT)
         glLoadIdentity()
         glBegin(GL_TRIANGLES)
-        glVertex2f(0, 0)
-        glVertex2f(self.width, 0)
-        glVertex2f(self.width, self.height)
-        glEnd() 
+        glVertex3f(0, 0, 0)
+        glVertex3f(self.width, 0, 0)
+        glVertex3f(self.width, self.height, 0)
+        glEnd()
+
+    def draw_objects(self):
+        pass
+
+    def draw_terrain(self):
+        pass
+
+    def draw_gui(self):
+        pass
 
     def on_draw(self):
         self.clear()
-        self.draw_triangle()
+        self.draw_objects()
+        self.draw_terrain()
+        self.draw_gui()
+        #self.draw_triangle()
 
 if __name__=="__main__":
     
