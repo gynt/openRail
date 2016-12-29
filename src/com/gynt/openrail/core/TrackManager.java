@@ -1,12 +1,12 @@
 package com.gynt.openrail.core;
 
+import com.gynt.openrail.core.ExitableTrack.Exit;
 import com.gynt.openrail.core.Location.Operation;
 
 public class TrackManager {
 
-	private Board board;
-
-	public void force_assemble(ExitableTrack track_wrapper1, int exit1, ExitableTrack track_wrapper2, int exit2) {
+	@Deprecated
+	public static void force_assemble(ExitableTrack track_wrapper1, int exit1, ExitableTrack track_wrapper2, int exit2) {
 		double offset = 0;
 		if (track_wrapper1 instanceof StraightTrack && track_wrapper2 instanceof StraightTrack) {
 			if (exit1 == exit2) {
@@ -54,6 +54,21 @@ public class TrackManager {
 			track_wrapper2.setLocation(d.apply(track_wrapper2.location, Operation.ADD));
 			track_wrapper1.connectExit(exit1, track_wrapper2.exits[exit2]);
 		}
+	}
+	
+	public static void assemble(ExitableTrack track_wrapper1, int exit1, ExitableTrack track_wrapper2, int exit2) {
+		
+		Exit e1 = track_wrapper1.exits[exit1];
+		Exit e2 = track_wrapper2.exits[exit2];
+		
+		assemble(e1, e2);
+		
+	}
+	
+	public static void assemble(Exit e1, Exit e2) {
+		e2.owner.setYaw(e1.yaw+180, e2.index);
+		
+		e2.owner.setLocation(e1.location.apply(e2.location, Operation.SUBTRACT).apply(e2.owner.location, Operation.ADD));
 	}
 
 }

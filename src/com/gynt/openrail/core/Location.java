@@ -26,7 +26,7 @@ public class Location {
 	public double y;
 	public double z;
 
-	Location(double x, double y, double z) {
+	public Location(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;

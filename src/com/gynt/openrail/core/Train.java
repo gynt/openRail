@@ -18,9 +18,9 @@ public class Train {
 		return new Train(center, length, front_axis, back_axis);
 	}
 
-	private Location location;
-	private Location front_axis;
-	private Location back_axis;
+	public Location location;
+	public Location front_axis;
+	public Location back_axis;
 	private double length;
 	private ExitableTrack track1;
 	private ExitableTrack track2;
