@@ -1,5 +1,6 @@
 package com.gynt.openrail.core;
 
+import com.gynt.openrail.core.ExitableTrack.Exit;
 import com.gynt.openrail.core.Location.Operation;
 import com.gynt.openrail.core.Track.Move;
 
@@ -21,8 +22,8 @@ public class Train {
 	private Location front_axis;
 	private Location back_axis;
 	private double length;
-	private Track track1;
-	private Track track2;
+	private ExitableTrack track1;
+	private ExitableTrack track2;
 	private double offset;
 	private double speed;
 	private boolean D;
@@ -59,7 +60,7 @@ public class Train {
 		this.D2 = direction;
 	}
 
-	public void setTracks(Track front_wheel, Track back_wheel) {
+	public void setTracks(ExitableTrack front_wheel, ExitableTrack back_wheel) {
 		this.track1 = front_wheel;
 		this.track2 = back_wheel;
 	}
@@ -110,13 +111,12 @@ public class Train {
 
 		while (m.remainder > 0) {
 			// print(r)
-			int i = track1.get_exit_index(m.newlocation);
+			Exit i = track1.getExit(m.newlocation);
 			// print("%s "%i)
-			if (i >= 0) {
+			if (i != null) {
 
-				Location z = track1.getExits()[i];
-				Track track_new = board.getTrack(z);
-				D = track_new.get_exit_index(z) == 0;
+				ExitableTrack track_new = i.connection.owner;
+				D = i.connection.owner.getD(i.connection.index);
 
 				track1 = track_new;
 
@@ -128,13 +128,12 @@ public class Train {
 		}
 
 		while (m2.remainder > 0) {
-			int i = track2.get_exit_index(m2.newlocation);
+			Exit i = track2.getExit(m2.newlocation);
 			// print("%s" % i)
-			if (i >= 0) {
-				Location z = track2.getExits()[i];
+			if (i != null) {
 
-				Track track_new = board.getTrack(z);
-				D = track_new.get_exit_index(z) == 0;
+				ExitableTrack track_new = i.connection.owner;
+				D = i.connection.owner.getD(i.connection.index);
 
 				track2 = track_new;
 
@@ -148,7 +147,7 @@ public class Train {
 		offset = m.newoffset;
 		back_axis = m2.newlocation;
 		offset2 = m.newoffset;
-
+		update();
 	}
 
 }

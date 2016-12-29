@@ -36,4 +36,12 @@ public class Location {
 		return new Location(op.perform(this.x, x),op.perform(this.y, y),op.perform(this.z, z));
 	}
 	
+	public Location apply(Location location, Operation op) {
+		return apply(location.x, location.y, location.z, op);
+	}
+	
+	public boolean isEqual(Location loc2) {
+		return x==loc2.x && y==loc2.y && z==loc2.z;
+	}
+	
 }
