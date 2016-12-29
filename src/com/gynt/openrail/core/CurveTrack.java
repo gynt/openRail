@@ -47,15 +47,15 @@ public class CurveTrack extends ExitableTrack {
 	}
 
 	private void updateYaw() {
-		exits[0].yaw = this.yaw - (angle / 2.0);
-		exits[1].yaw = this.yaw + (angle / 2.0);
+		exits[0].yaw = this.yaw - 0;
+		exits[1].yaw = this.yaw + (angle);
 	}
 
-	public void setYaw(double yaw, int exit) {
-		if (exit == 0) {
-			setYaw(yaw + (angle / 2.0));
+	public void setYaw(double yaw, int perspective) {
+		if (perspective == 0) {
+			setYaw(yaw + 0);
 		} else {
-			setYaw(yaw - (angle / 2.0));
+			setYaw(yaw - (angle));
 		}
 
 	}

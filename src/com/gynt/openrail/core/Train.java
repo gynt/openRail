@@ -39,7 +39,7 @@ public class Train {
 		this.length = length;
 		this.offset = 0;
 	}
-	
+
 	public Location getLocation() {
 		return location;
 	}

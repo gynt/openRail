@@ -1,11 +1,7 @@
 package com.gynt.openrail.core;
 
-import com.gynt.openrail.core.Location.Operation;
-
 public abstract class Track {
-	
 
-	
 	public static class Move {
 		public Location newlocation;
 		public double newoffset;
@@ -25,26 +21,24 @@ public abstract class Track {
 		this.yaw = yaw;
 		this.location = location;
 	}
-	
+
 	public abstract double getYaw(int exitindex);
+
 	public abstract void setYaw(double yaw, int exitindex);
+
 	public abstract void setYaw(double yaw);
-	
 
-
-	
 	public abstract Move compute_move(double offset, double distance, boolean D);
-	
 
 	protected abstract void onNewLocation();
-	
+
 	public void setLocation(Location location) {
 		this.location = location;
 		onNewLocation();
 	}
-	
+
 	public Location getLocation() {
 		return this.location;
 	}
-	
+
 }
