@@ -44,4 +44,9 @@ public class Location {
 		return x == loc2.x && y == loc2.y && z == loc2.z;
 	}
 
+	@Override
+	public String toString() {
+		return String.join(",", "x="+x, "y="+y, "z="+z);
+	}
+	
 }

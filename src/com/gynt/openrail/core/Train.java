@@ -15,6 +15,7 @@ public class Train {
 	public static Train getInstance(Location front_axis, Location back_axis) {
 		Location center = calc_location(front_axis, back_axis);
 		double length = calc_length(front_axis, back_axis);
+		System.out.println("Created train:\n" + String.join("\n", front_axis.x+" "+front_axis.y+" "+front_axis.z, back_axis.x+" "+back_axis.y+" "+back_axis.z, length+""));
 		return new Train(center, length, front_axis, back_axis);
 	}
 
@@ -37,7 +38,6 @@ public class Train {
 		this.back_axis = back_axis;
 		this.location = center;
 		this.length = length;
-		this.offset = 0;
 	}
 
 	public Location getLocation() {
@@ -46,6 +46,11 @@ public class Train {
 
 	public void setOffset(double offset) {
 		this.offset = offset;
+	}
+	
+	public void setOffset2(double offset) {
+		this.offset2= offset;
+		
 	}
 
 	public void setSpeed(double speed) {
@@ -113,7 +118,7 @@ public class Train {
 			// print(r)
 			Exit i = track1.getExit(m.newlocation);
 			// print("%s "%i)
-			if (i != null) {
+			if (i != null && i.connection!=null) {
 
 				ExitableTrack track_new = i.connection.owner;
 				D = i.connection.owner.getD(i.connection.index);
@@ -130,10 +135,10 @@ public class Train {
 		while (m2.remainder > 0) {
 			Exit i = track2.getExit(m2.newlocation);
 			// print("%s" % i)
-			if (i != null) {
+			if (i != null && i.connection!=null) {
 
 				ExitableTrack track_new = i.connection.owner;
-				D = i.connection.owner.getD(i.connection.index);
+				D2 = i.connection.owner.getD(i.connection.index);
 
 				track2 = track_new;
 
@@ -149,5 +154,11 @@ public class Train {
 		offset2 = m.newoffset;
 		update();
 	}
+
+	public double getLength() {
+		return length;
+	}
+
+
 
 }

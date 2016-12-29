@@ -66,9 +66,9 @@ public class TrackManager {
 	}
 	
 	public static void assemble(Exit e1, Exit e2) {
-		e2.owner.setYaw(e1.yaw+180, e2.index);
-		
+		e2.owner.setYaw(e1.yaw, e2.index);//+180?
 		e2.owner.setLocation(e1.location.apply(e2.location, Operation.SUBTRACT).apply(e2.owner.location, Operation.ADD));
+		ExitableTrack.connectExit(e1, e2);
 	}
 
 }
