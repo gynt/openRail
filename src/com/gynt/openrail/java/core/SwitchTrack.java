@@ -1,11 +1,99 @@
 package com.gynt.openrail.java.core;
 
+import com.gynt.openrail.java.core.utils.TrackComputation;
+
 public class SwitchTrack implements Track {
+
+	private Track[] connection_map;
 	
 	private TrackPath[] paths;
+	private boolean curved;
 	
+	private double straightlength;
+	private double curvelength;
+	
+	private Position position;
+
 	public SwitchTrack() {
-		paths = new TrackPath[3];
+		connection_map = new Track[3];
+		/** There are two paths for 1 endpoint. */
+		paths = new TrackPath[4];
+		paths[0] = new TrackPath() {
+
+			@Override
+			public Location translateOffset(double offset) {
+				double doffset = offset - (straightlength * 0.5);
+				if (doffset == 0)
+					return SwitchTrack.this.getPosition().location;
+				if (doffset < 0)
+					return TrackComputation.computeStraight(position, 0, doffset * -1);
+				if (doffset > 0)
+					return TrackComputation.computeStraight(position, 1, doffset);
+				throw new RuntimeException(String.format("Invalid doffset {} based on offset {}.", doffset, offset));
+			}
+
+			@Override
+			public Track getTrackAt(int endpoint) {
+				return getTrack().getTrackAt(endpoint);
+			}
+
+			@Override
+			public Track getTrackAt(double offset) {
+				if (offset == 0)
+					return SwitchTrack.this.connection_map[0];
+				if (offset == straightlength)
+					return SwitchTrack.this.connection_map[1];
+				throw new RuntimeException("Invalid offset: " + offset);
+			}
+
+			@Override
+			public Track getTrack() {
+				return SwitchTrack.this;
+			}
+
+			@Override
+			public double getPathLength() {
+				return straightlength;
+			}
+
+		};
+		paths[1] = new TrackPath() {
+			@Override
+			public Location translateOffset(double offset) {
+				double doffset = offset - (straightlength * 0.5);
+				if (doffset == 0)
+					return SwitchTrack.this.getPosition().location;
+				if (doffset < 0)
+					return TrackComputation.computeStraight(position, 1, doffset * -1);
+				if (doffset > 0)
+					return TrackComputation.computeStraight(position, 0, doffset);
+				throw new RuntimeException(String.format("Invalid doffset {} based on offset {}.", doffset, offset));
+			}
+
+			@Override
+			public Track getTrackAt(int endpoint) {
+				return getTrack().getTrackAt(endpoint);
+			}
+
+			@Override
+			public Track getTrackAt(double offset) {
+				if (offset == 0)
+					return SwitchTrack.this.connection_map[1];
+				if (offset == straightlength)
+					return SwitchTrack.this.connection_map[0];
+				throw new RuntimeException("Invalid offset: " + offset);
+			}
+
+			@Override
+			public Track getTrack() {
+				return SwitchTrack.this;
+			}
+
+			@Override
+			public double getPathLength() {
+				return straightlength;
+			}
+		};
 	}
 
 	@Override
@@ -23,7 +111,7 @@ public class SwitchTrack implements Track {
 	@Override
 	public void disconnectTrack(int endpoint, Track track) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -35,7 +123,7 @@ public class SwitchTrack implements Track {
 	@Override
 	public void setConnector(int endpoint, Track track) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -47,7 +135,7 @@ public class SwitchTrack implements Track {
 	@Override
 	public void setPosition(Position l) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -60,6 +148,14 @@ public class SwitchTrack implements Track {
 	public Location getLocation(int endpoint) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void setState(boolean curved) {
+		
+	}
+	
+	public boolean getState() {
+		return curved;
 	}
 
 }

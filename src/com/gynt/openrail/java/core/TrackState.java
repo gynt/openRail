@@ -7,6 +7,6 @@ public interface TrackState {
 	
 	public Location computeLocation();
 	
-	public void setLocation(TrackPath track);
+	public void setLocation(TrackPath track, double offset);
 	
 }

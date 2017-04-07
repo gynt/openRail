@@ -3,20 +3,18 @@ package com.gynt.openrail.java.core;
 public class StraightTrack implements Track {
 	
 	private Track[] connection_map;
-	private TrackPath path;
+	private TrackPath[] paths;
 	private int length;
 	private Position position;
 
 	public StraightTrack() {
 		connection_map = new Track[2];
 		length = 16;
-		path = new TrackPath() {
+		paths = new TrackPath[2];
+		paths[0] = new TrackPath() {
 			
 			@Override
 			public Location translateOffset(double offset) {
-				if(offset < 0) {
-					offset=length-offset;
-				}
 				double doffset = offset-(length*0.5);
 				if(doffset==0) return StraightTrack.this.getPosition().location;
 				if(doffset < 0) return StraightTrack.this.computeLocation(0, doffset*-1);
@@ -31,8 +29,8 @@ public class StraightTrack implements Track {
 			
 			@Override
 			public Track getTrackAt(double offset) {
+				if(offset==0) return StraightTrack.this.connection_map[0];
 				if(offset==length) return StraightTrack.this.connection_map[1];
-				if(offset==-1*length) return StraightTrack.this.connection_map[0];
 				throw new RuntimeException("Invalid offset: " + offset);
 			}
 			
@@ -46,6 +44,38 @@ public class StraightTrack implements Track {
 				return length;
 			}
 
+		};
+		paths[1] = new TrackPath() {
+			@Override
+			public Location translateOffset(double offset) {
+				double doffset = offset-(length*0.5);
+				if(doffset==0) return StraightTrack.this.getPosition().location;
+				if(doffset < 0) return StraightTrack.this.computeLocation(1, doffset*-1);
+				if(doffset > 0) return StraightTrack.this.computeLocation(0, doffset);
+				throw new RuntimeException(String.format("Invalid doffset {} based on offset {}.", doffset, offset));
+			}
+			
+			@Override
+			public Track getTrackAt(int endpoint) {
+				return getTrack().getTrackAt(endpoint);
+			}
+			
+			@Override
+			public Track getTrackAt(double offset) {
+				if(offset==0) return StraightTrack.this.connection_map[1];
+				if(offset==length) return StraightTrack.this.connection_map[0];
+				throw new RuntimeException("Invalid offset: " + offset);
+			}
+			
+			@Override
+			public Track getTrack() {
+				return StraightTrack.this;
+			}
+			
+			@Override
+			public double getPathLength() {
+				return length;
+			}
 		};
 	}
 
@@ -69,7 +99,7 @@ public class StraightTrack implements Track {
 
 	@Override
 	public TrackPath getTrackPath(int endpoint) {
-		return path;
+		return paths[endpoint];
 	}
 
 	@Override
