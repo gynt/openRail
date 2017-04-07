@@ -2,18 +2,22 @@ package com.gynt.openrail.java.core;
 
 public interface Track {
 	
-	public Location translateOffset(double offset);
-	
-	public double computeOffset(double current_offset, double speed);
-	
-	public Location computeDestination(double current_offset, double speed);
-	
-	public Track getTrackAt(double offset);
-	
-	public Track getTrackAt(int exit);
+	public Track getTrackAt(int endpoint);
 
-	public Track connectTrack(int exit, Track track, int exit2);
+	public Track connectTrack(int endpoint, Track track, int endpoint2);
 	
-	public void disconnectTrack(int exit, Track track);
+	public void disconnectTrack(int endpoint, Track track);
+	
+	public TrackPath getTrackPath(int endpoint);
+	
+	public void setConnector(int endpoint, Track track);
+	
+	public int getConnectedEndpoint(Track track);
+	
+	public void setPosition(Position l);
+	
+	public Position getPosition();
+	
+	public Location getLocation(int endpoint);
 	
 }

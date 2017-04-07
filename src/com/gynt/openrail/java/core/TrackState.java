@@ -2,10 +2,11 @@ package com.gynt.openrail.java.core;
 
 public interface TrackState {
 
-	public Track getTrack();
+	public TrackPath getTrackPath();
 	public double getOffset();
-	public Location getLocation();
 	
-	public void setLocation(Track track, double offset);
+	public Location computeLocation();
+	
+	public void setLocation(TrackPath track);
 	
 }
