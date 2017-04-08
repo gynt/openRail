@@ -1,5 +1,9 @@
-package com.gynt.openrail.java.core;
+package com.gynt.openrail.java.core.basic;
 
+import com.gynt.openrail.java.core.Location;
+import com.gynt.openrail.java.core.Position;
+import com.gynt.openrail.java.core.Track;
+import com.gynt.openrail.java.core.TrackPath;
 import com.gynt.openrail.java.core.utils.TrackComputation;
 
 public class SwitchTrack implements Track {
@@ -157,5 +161,15 @@ public class SwitchTrack implements Track {
 	public boolean getState() {
 		return curved;
 	}
+
+        //TODO: muy importante!
+    @Override
+    public int getEndpoint(TrackPath tp) {
+        if(tp==paths[0]) return 0;
+        if(tp==paths[1]) return 1;
+        if(tp==paths[2]) return 0;
+        if(tp==paths[3]) return 2;
+        return -1;
+    }
 
 }

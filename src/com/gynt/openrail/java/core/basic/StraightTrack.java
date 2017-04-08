@@ -1,4 +1,9 @@
-package com.gynt.openrail.java.core;
+package com.gynt.openrail.java.core.basic;
+
+import com.gynt.openrail.java.core.Location;
+import com.gynt.openrail.java.core.Position;
+import com.gynt.openrail.java.core.Track;
+import com.gynt.openrail.java.core.TrackPath;
 
 public class StraightTrack implements Track {
 	
@@ -143,5 +148,12 @@ public class StraightTrack implements Track {
 	public Location getLocation(int endpoint) {
 		return computeLocation(endpoint, length*0.5);
 	}
+
+    @Override
+    public int getEndpoint(TrackPath tp) {
+        if(tp==paths[0]) return 0;
+        if(tp==paths[1]) return 1;
+        return -1;
+    }
 
 }

@@ -19,5 +19,7 @@ public interface Track {
 	public Position getPosition();
 	
 	public Location getLocation(int endpoint);
+        
+        public int getEndpoint(TrackPath tp);
 	
 }

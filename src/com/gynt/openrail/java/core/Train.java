@@ -6,6 +6,7 @@ public interface Train {
 	public void setSpeed(double speed);
 	
 	public TrackState[] getTrackStates();
+        public Position computePosition();
 	
 //	public Track[] getCurrentTracks();
 //	public Track getTrackHead();
