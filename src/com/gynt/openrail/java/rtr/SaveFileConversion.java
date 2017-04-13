@@ -24,7 +24,7 @@ public class SaveFileConversion {
 					sb.append(String.format("%02X ", data[i + 3]));
 					sb.append("\n");
 				}
-				Files.write(new File(filepath + ".csv").toPath(), sb.toString().getBytes());
+				Files.write(new File(filepath.split("[.]")[0] + ".csv").toPath(), sb.toString().getBytes());
 				
 				System.out.println("Succesfully exported");
 			} else if (command.equals("-i")) {
@@ -42,7 +42,7 @@ public class SaveFileConversion {
 					}
 				}
 				baos.write(hexStringToByteArray(hexstring));
-				Files.write(new File(filepath + ".roa").toPath(), baos.toByteArray());
+				Files.write(new File(filepath.split("[.]")[0] + ".roa").toPath(), baos.toByteArray());
 				
 				System.out.println("Succesfully imported");
 			} else {
