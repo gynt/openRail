@@ -17,12 +17,12 @@ public class SaveFileReader {
 		String fileheader = new String(temp);
 		
 		int trackcount = bb.getInt(); 
-		int i = 0;		
+		int i = 0;
+		
+		byte[] unknown = new byte[4];
 		
 		while(i<trackcount) {
 			i++;
-			
-			byte[] unknown = new byte[4];
 			
 			byte[] id1 = new byte[4];
 			bb.get(id1);
@@ -32,8 +32,8 @@ public class SaveFileReader {
 			
 			int tracknumber = bb.getInt();
 			
-			bb.get(unknown);
-			bb.get(unknown);
+			int sometimestracktype = bb.getInt();
+			int tracktype = bb.getInt();
 			
 			float tracklength = bb.getFloat();
 			
@@ -41,8 +41,8 @@ public class SaveFileReader {
 			
 			float x0 = bb.getFloat();
 			float z0 = bb.getFloat();
+			float y0 = bb.getFloat(); //More negative means higher...
 			
-			bb.get(unknown);
 			bb.get(unknown);
 
 			float rotation = bb.getFloat();
@@ -58,8 +58,8 @@ public class SaveFileReader {
 			bb.get(unknown);
 			float x1 = bb.getFloat();
 			float z1 = bb.getFloat();
+			float y1 = bb.getFloat(); //More negative means higher...
 			
-			bb.get(unknown);
 			bb.get(unknown);
 			
 			int end2_connected_with_id = bb.getInt();
@@ -69,19 +69,22 @@ public class SaveFileReader {
 			bb.get(unknown);
 			float x2 = bb.getFloat();
 			float z2 = bb.getFloat();
+			float y2 = bb.getFloat();
 			
 			bb.get(unknown);
+			
+			int end3_connected_with_id = bb.getInt();
+			bb.get(unknown);
+			int totalconnectedexits3 = bb.getInt(); //2-connected Uncertain.
+			bb.get(unknown);
 			bb.get(unknown);
 			
-			bb.get(unknown);
-			bb.get(unknown);
-			bb.get(unknown);
-			bb.get(unknown);
-			bb.get(unknown);
-			float height1 = bb.getFloat(); //Unsure!
-			float height2 = bb.getFloat(); //Unsure!
+			//Has value in case of three exits: switches. Else: -1000000
+			float x3 = bb.getFloat();
+			float y3 = bb.getFloat();
+			float z3 = bb.getFloat();
 			
-			byte[] unknownremainder = new byte[40*4];
+			byte[] unknownremainder = new byte[39*4];
 			bb.get(unknownremainder);
 			
 		}
