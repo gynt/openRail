@@ -5,7 +5,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.VertexBuffer;
 import com.jme3.scene.shape.Quad;
 
-public class Tabletop extends Node {
+public class TabletopOld extends Node {
 	
 	public static int QUADSIZE = 16;
 	@Deprecated
@@ -16,7 +16,7 @@ public class Tabletop extends Node {
 	private int width;
 	private int depth;
 	
-	public Tabletop(int width, int depth) {
+	public TabletopOld(int width, int depth) {
 		if(width%2!=0 || depth%2!=0) {
 			throw new RuntimeException("Illegal dimensions tabletop, must be even: " + width + " " + depth);
 		}
