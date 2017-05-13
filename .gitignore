@@ -1,3 +1,5 @@
+jme3/
+
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -109,3 +111,5 @@ ENV/
 /st1.roa
 /v1.roa
 /v2.roa
+/OpenAL64.dll
+/lwjgl64.dll
