@@ -64,17 +64,17 @@ public class StructsIO {
 				Terrain result = new Terrain();
 				result.unknown = b.getInt();
 				result.unknown2 = b.getInt();
-				result.unknownCount = b.getInt();
-				result.terrain = new Structs.HeightMap[result.unknownCount];
-				for(int i = 0; i < result.unknownCount; i++) {
+				result.width_height_multiplied = b.getInt();
+				result.terrain = new Structs.HeightMap[result.width_height_multiplied];
+				for(int i = 0; i < result.width_height_multiplied; i++) {
 					result.terrain[i] = LWProto.retrieve(Structs.HeightMap.class).deserialize(b);
 				}
-				result.unknown3 = new tr10_2[result.unknownCount];
-				for(int i = 0; i < result.unknownCount; i++) {
+				result.unknown3 = new tr10_2[result.width_height_multiplied];
+				for(int i = 0; i < result.width_height_multiplied; i++) {
 					result.unknown3[i] = LWProto.retrieve(Structs.tr10_2.class).deserialize(b);
 				}
-				result.u_texture = new TextureMap[result.unknownCount*6];
-				for(int i = 0; i < result.unknownCount*6; i++) {
+				result.u_texture = new TextureMap[result.width_height_multiplied*6];
+				for(int i = 0; i < result.width_height_multiplied*6; i++) {
 					result.u_texture[i] = LWProto.retrieve(Structs.TextureMap.class).deserialize(b);
 				}
 				result.unknownCount2 = b.getInt();

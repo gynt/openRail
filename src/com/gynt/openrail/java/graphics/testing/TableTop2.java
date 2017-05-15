@@ -1,9 +1,16 @@
 package com.gynt.openrail.java.graphics.testing;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.text.ParseException;
 import java.util.Collection;
 
+import com.gynt.openrail.java.rtr.io.Structs.SaveFile;
+import com.gynt.openrail.java.rtr.io.StructsIO;
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -21,6 +28,11 @@ public class TableTop2 extends Geometry {
 			@Override
 			public void simpleInitApp() {
 				Material mat_terrain = new Material(assetManager, "Common/MatDefs/Terrain/Terrain.j3md");
+//				Material mat_terrain = new Material(assetManager,
+//					    "Common/MatDefs/Misc/Unshaded.j3md");
+//				mat_terrain.setColor("Color", ColorRGBA.Green);
+				
+				//mat_terrain.getAdditionalRenderState().setWireframe(true);
 
 				/**
 				 * 1.1) Add ALPHA map (for red-blue-green coded splat textures)
@@ -45,12 +57,52 @@ public class TableTop2 extends Geometry {
 				mat_terrain.setTexture("Tex3", rock);
 				mat_terrain.setFloat("Tex3Scale", 128f);
 
-				TableTop2 t = new TableTop2(20, 20);
-				t.setMaterial(mat_terrain);
-				rootNode.attachChild(t);
+				//TableTop2 t = new TableTop2(4, 4);
+				TableTop2 t;
+				try {
+					SaveFile sf = StructsIO.deserialize(Files.readAllBytes(new File("terrainhill.roa").toPath()));
+					t = TableTop2.fromSaveFile(sf);
+					t.setMaterial(mat_terrain);
+					rootNode.attachChild(t);
+					
+					cam.setAxes(Vector3f.UNIT_Z, new Vector3f(0, -1, 0), Vector3f.UNIT_X);
+					flyCam.setMoveSpeed(20F);
+					cam.setLocation(new Vector3f(sf.view.x, sf.view.y, sf.view.z));
+					cam.lookAt(new Vector3f(4,0,2), new Vector3f(0, -1, 0));
+					
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	
 			}
 
 		}.start();
+	}
+	
+	public static final TableTop2 fromSaveFile(SaveFile sf) {
+		int width=(int) Math.sqrt(sf.terrain.width_height_multiplied);
+		TableTop2 result = new TableTop2(width,width);
+		
+		int i = 0;
+		for(int z= 0; z<width;z++) {
+			for(int x= 0; x<width;x++) {
+				result.setHeight(x, z, sf.terrain.terrain[i].y);
+				i++;
+			}
+		}
+		
+		
+		return result;
 	}
 
 	private TableTopMesh myMesh;
@@ -98,6 +150,9 @@ public class TableTop2 extends Geometry {
 		private int depth;
 		private int rwidth;
 		private int rdepth;
+		private Vector3f[] vertices;
+		private Vector2f[] texCoords;
+		private int[] indexes;
 
 		public TableTopMesh(int width, int depth) {
 			this.width = width;
@@ -109,51 +164,63 @@ public class TableTop2 extends Geometry {
 		public void generate() {
 
 			// TODO: Test
-			Vector3f[] vertices = new Vector3f[rwidth * rdepth];
-			for (int z = 0; z < rwidth; z++) {
-				for (int x = 0; x < rdepth; x++) {
+			vertices = new Vector3f[rwidth * rdepth];
+			for (int z = 0; z < rdepth; z++) {
+				for (int x = 0; x < rwidth; x++) {
 					vertices[(z * rwidth) + x] = new Vector3f(x, 0, z);
 				}
 			}
 			setBuffer(VertexBuffer.Type.Position, 3, BufferUtils.createFloatBuffer(vertices));
 
 			// TODO: Test
-			Vector2f[] texCoords = new Vector2f[rwidth * rdepth];
-			float texwidth = 1 / width;
-			float texdepth = 1 / depth;
-			for (int z = 0; z < rwidth; z++) {
-				for (int x = 0; x < rdepth; x++) {
+			texCoords = new Vector2f[rwidth * rdepth];
+			float texwidth = 1.0F / width;
+			float texdepth = 1.0F / depth;
+			for (int z = 0; z < rdepth; z++) {
+				for (int x = 0; x < rwidth; x++) {
 					texCoords[(z * rwidth) + x] = new Vector2f(texwidth * x, texdepth * z);
 				}
 			}
+			
+			setBuffer(VertexBuffer.Type.TexCoord, 2, BufferUtils.createFloatBuffer(texCoords));
 
 			// TODO: Test
-			int[] indexes = new int[vertices.length * 6];
-			for (int z = 0; z < rwidth; z++) {
-				for (int x = 0; x < rdepth; x++) {
-					int b = (z * rwidth) + x;
-					int base = b * 6;
-					indexes[base + 0] = b;
-					indexes[base + 1] = b + 1;
-					indexes[base + 2] = b + rwidth;
-					indexes[base + 3] = b + 1;
-					indexes[base + 4] = b + 1 + rwidth;
-					indexes[base + 5] = b + rwidth;
-				}
+			indexes = new int[width*depth * 3 * 2]; //Each quad is 2 triangles of 3 vertices.
+			int quad = 0;
+			while (quad<(depth*width)) {
+				
+				int quadz=quad/width;
+				int quadx=quad+quadz;
+				
+				
+				int i = quad*6;
+				
+				indexes[i]=quadx;
+				indexes[i+1]=quadx+1;
+				indexes[i+2]=quadx+rwidth;
+				
+				indexes[i+3]=quadx+1;
+				indexes[i+4]=quadx+1+rwidth;
+				indexes[i+5]=quadx+rwidth;
+				
+				quad++;
 			}
+			
 			setBuffer(VertexBuffer.Type.Index, 3, indexes);
-
+			
+			updateBound();
 		}
 
 		public void setHeight(int x, int z, float height) {
-			getFloatBuffer(VertexBuffer.Type.Position).array()[((z * rwidth) + x) * 3 + 1] = height;
+			vertices[((z * rwidth) + x)].y = height;
+			setBuffer(VertexBuffer.Type.Position, 3, BufferUtils.createFloatBuffer(vertices));
 		}
 
 		public void setHeights(Collection<HeightMapping> heights) {
-			float[] array = getFloatBuffer(VertexBuffer.Type.Position).array();
 			for (HeightMapping h : heights) {
-				array[((h.z * rwidth) + h.x) * 3 + 1] = h.height;
+				vertices[((h.z * rwidth) + h.x)].y = h.height;
 			}
+			setBuffer(VertexBuffer.Type.Position, 3, BufferUtils.createFloatBuffer(vertices));
 		}
 
 	}
