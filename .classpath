@@ -78,25 +78,5 @@
 	<classpathentry kind="lib" path="jme3/lib/simple.jar"/>
 	<classpathentry kind="lib" path="jme3/lib/vecmath.jar"/>
 	<classpathentry kind="lib" path="jme3/lib/xpp3.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-android-native-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-android-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-blender-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-bullet-native-android-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-bullet-native-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-bullet-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-core-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-desktop-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-effects-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-ios-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-jbullet-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-jogg-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-jogl-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-lwjgl-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-lwjgl3-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-networking-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-niftygui-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-plugins-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-terrain-sources.jar"/>
-	<classpathentry kind="lib" path="jme3/sources/jme3-testdata-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
