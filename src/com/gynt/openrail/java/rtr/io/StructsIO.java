@@ -22,7 +22,7 @@ import com.gynt.openrail.java.utils.StringPrint;
 public class StructsIO {
 
 	static {
-		LWProto.register(Structs.Track[].class, new LWProto.Serializer<Structs.Track[]>(Structs.Track[].class));
+		LWProto.register(Structs.Track[].class, new LWProto.Serializer<Structs.Track[]>(Structs.TrackDescriptor[].class));
 		for(Class<?> c : Structs.class.getDeclaredClasses()) {
 			if(c.isEnum()) continue;
 			LWProto.register(c, new LWProto.Serializer(c, false));
